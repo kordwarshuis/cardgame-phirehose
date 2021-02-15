@@ -6,3 +6,4 @@ script_phirehose-local.sh
 API_KEYS.php
 SEARCH_TERM.php
 README.md
+phirehose-create-tweets-history.php
