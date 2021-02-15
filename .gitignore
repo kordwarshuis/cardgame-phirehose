@@ -1,0 +1,8 @@
+_backup
+.DS_Store
+.history
+live.sh
+script_phirehose-local.sh
+API_KEYS.php
+SEARCH_TERM.php
+README.md
