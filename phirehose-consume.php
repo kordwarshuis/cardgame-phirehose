@@ -51,22 +51,22 @@ class GhettoQueueConsumer
     {
 
         // file with end result
-        $jsonfilename = "tweets.json";
+        $jsonFileName = "tweets.json";
 
         // Init some things
         $lastCheck = 0;
 
         // Loop infinitely
         while (true) {
-            if (filesize($jsonfilename) > 20000) {
-                $jsonfilenamehandle = fopen($jsonfilename, 'w');
-                fwrite($jsonfilenamehandle, "");
-                fclose($jsonfilenamehandle);
+            if (filesize($jsonFileName) > 20000) {
+                $jsonFileNameHandle = fopen($jsonFileName, 'w');
+                fwrite($jsonFileNameHandle, "");
+                fclose($jsonFileNameHandle);
             }
 
-            $jsonfilenamehandle3 = fopen($jsonfilename, 'w');
-            fwrite($jsonfilenamehandle3, "{\"statuses\": [");
-            fclose($jsonfilenamehandle3);
+            $jsonFileNameHandle3 = fopen($jsonFileName, 'w');
+            fwrite($jsonFileNameHandle3, "{\"statuses\": [");
+            fclose($jsonFileNameHandle3);
 
             // Get a list of queue files
             $queueFiles = glob($this->queueDir . '/' . $this->filePattern);
@@ -76,14 +76,14 @@ class GhettoQueueConsumer
 
             // Iterate over each file (if any)
             foreach ($queueFiles as $queueFile) {
-                $this->processQueueFile($queueFile, $jsonfilename);
+                $this->processQueueFile($queueFile, $jsonFileName);
             }
 
-            $jsonfilenamehandle2 = fopen($jsonfilename, 'a');
+            $jsonFileNameHandle2 = fopen($jsonFileName, 'a');
             
             // a closing string to make it JSON
-            fwrite($jsonfilenamehandle2, "]}");
-            fclose($jsonfilenamehandle2);
+            fwrite($jsonFileNameHandle2, "]}");
+            fclose($jsonFileNameHandle2);
 
             // Wait until ready for next check
             $this->log('Sleeping...');
@@ -99,7 +99,7 @@ class GhettoQueueConsumer
      * Processes a queue file and does something with it (example only)
      * @param string $queueFile The queue file
      */
-    protected function processQueueFile($queueFile, $jsonfilename)
+    protected function processQueueFile($queueFile, $jsonFileName)
     {
         $this->log('Processing file: ' . $queueFile);
 
@@ -144,7 +144,7 @@ class GhettoQueueConsumer
             // $jsonstring .= $data_str;
         } // End while
 
-        $fh = fopen($jsonfilename, 'a') or die("can't open file");
+        $fh = fopen($jsonFileName, 'a') or die("can't open file");
         fwrite($fh, $jsonstring);
         fclose($fh);
 
