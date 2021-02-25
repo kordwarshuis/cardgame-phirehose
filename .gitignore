@@ -2,8 +2,11 @@ _backup
 .DS_Store
 .history
 live.sh
+live.*.sh
 script_phirehose-local.sh
 API_KEYS.php
 SEARCH_TERM.php
 README.md
 phirehose-create-tweets-history.php
+phirehose-create-tweets-history2.php
+uptime-watch-restart.sh
