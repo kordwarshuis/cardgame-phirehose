@@ -1,15 +1,15 @@
 <?php
 /* workflow creating file with tweets history
 
-This script creates a JSON file with a history of tweets from a source JSON file containing tweets in Twitter format, that is refreshed everey ten seconds.
+The script creates a JSON file of a history of tweets composed from a source JSON file containing tweets in Twitter format, that is refreshed every ten seconds.
 
 The script runs on the command line every ten seconds.
 
-Source file: tweets.json
+Source file: tweets.json (created via a modified version of https://github.com/fennb/phirehose)
 Target file: tweets-history.json
 
 Workflow:
--create tweets-history.json
+-create tweets-history.json file
 -for every tweet in tweets.json check if it is already in tweets-history.json
 -if the tweet is already in tweets-history.json go to next tweet in tweets.json, if not: add the tweet to tweets-history.json
 -the script runs every ten seconds via sleep command
@@ -20,18 +20,12 @@ example code:
 - https://stackoverflow.com/questions/31111963/json-manipulation-in-php
 - https://stackoverflow.com/questions/34986948/how-to-remove-duplicate-data-of-json-object-using-php
 
-json_encode — Returns the JSON representation of a value
-json_decode — Decodes a JSON string, Takes a JSON encoded string and converts it into a PHP variable.
-
 RUN FROM COMMAND LINE:
 http://stackoverflow.com/a/23028860
 start:
 $php create-tweets-history.php
 
-stop:
-Ctrl - C
-
- */
+*/
 
 function processTweets()
 {
