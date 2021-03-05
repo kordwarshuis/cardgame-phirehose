@@ -1,7 +1,6 @@
 #!/bin/bash
 #Cronjob to stop and restart Phirehose twitter feeds
 # hvancann@bcws.io
-cd ~/domains/blockchainbird.org/public_html/t/twitter-phirehose/
 
 #Be very aware that these variables are crucial for the survival of your running system!!
 NAMESTR="phirehose"
