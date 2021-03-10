@@ -37,29 +37,44 @@ function processTweets()
 //   ));
 
     // JSON string from file to PHP array
-    $arraySource = json_decode(
-        file_get_contents($source), true
-    );
+    $arraySource = json_decoder($source);
 
     // https://stackoverflow.com/a/34987161
-    $arrayTarget = file_get_contents($target);
+    $arrayTarget = json_decoder($target);
 
-    // JSON string to PHP array
-    $arrayTarget = json_decode($arrayTarget);
-    // echo gettype($arrayTarget);
-
-    foreach ($arraySource as $i => $i_value) {
-        // merge the array item with existing array
-        $arrayTarget = array_merge($arrayTarget, $i_value);
-    }
+    // Replace index with tweet id
+    $combinationArray = array_merge($arraySource["statuses"], $arrayTarget["statuses"] ?? array());
+    $tweetIds = array_column($combinationArray, 'id_str');
+    $modifiedArray = array_combine($tweetIds, $combinationArray);
 
     // https://stackoverflow.com/a/34987161
-    $arrayTarget = array_values(array_unique($arrayTarget, SORT_REGULAR));
+    $uniqueArray = array_unique($modifiedArray, SORT_REGULAR);
 
-    // to JSON string
+    // https://stackoverflow.com/a/34987161
+    // Convert to source formart
+    $arrayTarget = array_values($uniqueArray);
+    $arrayTarget["statuses"] = $arrayTarget;
+
     $arrayTarget = json_encode($arrayTarget);
 
     file_put_contents('tweets-history.json', $arrayTarget);
+
+
+
+}
+
+function json_decoder($file) {
+    $jsonString = file_get_contents($source);
+    $json = json_decode($jsonString, true);
+
+    // Validate JSON if invalid
+    if (is_null($json)) {
+        $jsonString = preg_replace("\\," , "\\",$jsonString);
+        $jsonString = preg_replace(",,",",",$jsonString)
+        return json_decode($jsonString, true);
+    }
+
+    return $json
 }
 
 // processTweets();
