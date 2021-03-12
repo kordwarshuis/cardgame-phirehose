@@ -27,9 +27,9 @@ $php create-tweets-history.php
 
 */
 
-function processTweets()
+function processTweets($source, $maxTweets = 500)
 {
-    $source = 'tweetsDevelop.json';
+    //$source = 'tweetsDevelop.json';
     $target = 'tweets-history.json';
 
 //     var_dump(json_decode(
@@ -43,43 +43,81 @@ function processTweets()
     $arrayTarget = json_decoder($target);
 
     // Replace index with tweet id
-    $combinationArray = array_merge($arraySource["statuses"], $arrayTarget["statuses"] ?? array());
+    $arrayTarget = isset($arrayTarget["statuses"]) ? $arrayTarget["statuses"] : array();
+    $combinationArray = array_merge($arraySource["statuses"], $arrayTarget);
     $tweetIds = array_column($combinationArray, 'id_str');
     $modifiedArray = array_combine($tweetIds, $combinationArray);
 
     // https://stackoverflow.com/a/34987161
     $uniqueArray = array_unique($modifiedArray, SORT_REGULAR);
 
+    // Remove difference from tailend of tweets, it exceeds $maxTweets
+    if (count($uniqueArray) > $maxTweets) {
+        $diff = count($uniqueArray) - $maxTweets;
+        $uniqueArray = array_slice($uniqueArray, $diff);
+    }
+
     // https://stackoverflow.com/a/34987161
     // Convert to source formart
-    $arrayTarget = array_values($uniqueArray);
-    $arrayTarget["statuses"] = $arrayTarget;
-
+    $arrayTarget["statuses"] = array_values($uniqueArray);
     $arrayTarget = json_encode($arrayTarget);
 
     file_put_contents('tweets-history.json', $arrayTarget);
 
-
-
 }
 
 function json_decoder($file) {
-    $jsonString = file_get_contents($source);
+    $jsonString = file_get_contents($file);
     $json = json_decode($jsonString, true);
 
     // Validate JSON if invalid
     if (is_null($json)) {
-        $jsonString = preg_replace("\\," , "\\",$jsonString);
-        $jsonString = preg_replace(",,",",",$jsonString)
-        return json_decode($jsonString, true);
+         throw new Exception('Source file Contains Invalid JSON: '.$file);
     }
 
-    return $json
+    return $json;
 }
 
 // processTweets();
 
+/** Test processTweets() using valid tweets.php JSON output **/
+$testTweets = scandir("phirehose/tweets-example");
+foreach($testTweets as $key => $file) {
+    if (pathinfo($file, PATHINFO_EXTENSION)) {
+
+        // Parameters
+        $source = "phirehose/tweets-example/".$file;
+        $maxTweets = 250;
+
+        print_r("\r\nProcessing File ".$source."\n\r");
+
+        print_r("Testing Pre Conditions...\n\r");
+            $newTweetsId = array_column(json_decoder($source)["statuses"], 'id');
+            print_r(count($newTweetsId) < $maxTweets ? "\t(Pass)":"\t(Error)");
+            print_r(" Number of Tweets < maxTweets\n\r");
+
+        processTweets($source, $maxTweets);
+
+        print_r("Testing Post Conditions...\n\r");
+            $historyTweetsId = array_column(json_decoder("tweets-history.json")["statuses"], "id");
+            print_r(in_array($newTweetsId[0], $historyTweetsId)?"\t(Pass)":"\t(Fail)");
+            print_r(" tweets-history.json contains FIRST tweet from source file\n\r");
+            print_r(in_array(end($newTweetsId), $historyTweetsId)?"\t(Pass)":"\t(Fail)");
+            print_r(" tweets-history.json contains LAST tweet from source file\n\r");
+
+        print_r("Testing Invariants...\n\r");
+            print_r(count($historyTweetsId) < $maxTweets?"\t(Pass)":"\t(Fail)");
+            print_r(" # of tweets in tweets-history.json is LESS than maxTweets\r\n");
+            print_r(count($historyTweetsId) == count(array_unique($historyTweetsId))? "\t(Pass)":"\t(Fail)");
+            print_r(" All tweet Ids are UNIQUE\n\r");
+
+        sleep(10);
+    }
+}
+
+/**
 while (true) {
-    processTweets();
+    processTweets($sourceTarget);
     sleep(10); // in seconds
 }
+**/
