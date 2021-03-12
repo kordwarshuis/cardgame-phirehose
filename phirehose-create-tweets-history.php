@@ -99,7 +99,7 @@ foreach($testTweets as $key => $file) {
         processTweets($source, $maxTweets);
 
         print_r("Testing Post Conditions...\n\r");
-            $historyTweetsId = array_column(json_decoder("tweets-history.json")["statuses"], "id");
+            $historyTweetsId = array_column(json_decoder($source)["statuses"], "id");
             print_r(in_array($newTweetsId[0], $historyTweetsId)?"\t(Pass)":"\t(Fail)");
             print_r(" tweets-history.json contains FIRST tweet from source file\n\r");
             print_r(in_array(end($newTweetsId), $historyTweetsId)?"\t(Pass)":"\t(Fail)");
