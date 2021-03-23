@@ -39,9 +39,6 @@ function processTweets($source, $maxTweets = 500)
     // JSON string from file to PHP array
     $arraySource = json_decoder($source);
 
-    // https://stackoverflow.com/a/34987161
-    $arrayTarget = json_decoder($target);
-
     // Replace index with tweet id
     $arrayTarget = isset($arrayTarget["statuses"]) ? $arrayTarget["statuses"] : array();
     $combinationArray = array_merge($arraySource["statuses"], $arrayTarget);
