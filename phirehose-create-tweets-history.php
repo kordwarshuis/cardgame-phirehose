@@ -27,10 +27,18 @@ $php create-tweets-history.php
 
 */
 
-function processTweets($source, $maxTweets = 500)
+$source = 'tweets.json';
+$target = 'tweets-history.json';
+$maxTweets = 500;
+
+while (true) {
+    processTweets($source, $target, $maxTweets);
+    sleep(10); // in seconds
+}
+
+
+function processTweets($source, $target, $maxTweets = 500)
 {
-    //$source = 'tweetsDevelop.json';
-    $target = 'tweets-history.json';
 
 //     var_dump(json_decode(
 //       file_get_contents($source), true
@@ -74,47 +82,3 @@ function json_decoder($file) {
 
     return $json;
 }
-
-// processTweets();
-
-/** Test processTweets() using valid tweets.php JSON output **/
-$testTweets = scandir("phirehose/tweets-example");
-foreach($testTweets as $key => $file) {
-    if (pathinfo($file, PATHINFO_EXTENSION)) {
-
-        // Parameters
-        $source = "phirehose/tweets-example/".$file;
-        $maxTweets = 250;
-
-        print_r("\r\nProcessing File ".$source."\n\r");
-
-        print_r("Testing Pre Conditions...\n\r");
-            $newTweetsId = array_column(json_decoder($source)["statuses"], 'id');
-            print_r(count($newTweetsId) < $maxTweets ? "\t(Pass)":"\t(Error)");
-            print_r(" Number of Tweets < maxTweets\n\r");
-
-        processTweets($source, $maxTweets);
-
-        print_r("Testing Post Conditions...\n\r");
-            $historyTweetsId = array_column(json_decoder($source)["statuses"], "id");
-            print_r(in_array($newTweetsId[0], $historyTweetsId)?"\t(Pass)":"\t(Fail)");
-            print_r(" tweets-history.json contains FIRST tweet from source file\n\r");
-            print_r(in_array(end($newTweetsId), $historyTweetsId)?"\t(Pass)":"\t(Fail)");
-            print_r(" tweets-history.json contains LAST tweet from source file\n\r");
-
-        print_r("Testing Invariants...\n\r");
-            print_r(count($historyTweetsId) < $maxTweets?"\t(Pass)":"\t(Fail)");
-            print_r(" # of tweets in tweets-history.json is LESS than maxTweets\r\n");
-            print_r(count($historyTweetsId) == count(array_unique($historyTweetsId))? "\t(Pass)":"\t(Fail)");
-            print_r(" All tweet Ids are UNIQUE\n\r");
-
-        sleep(10);
-    }
-}
-
-/**
-while (true) {
-    processTweets($sourceTarget);
-    sleep(10); // in seconds
-}
-**/
