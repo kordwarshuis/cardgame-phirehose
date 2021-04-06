@@ -29,7 +29,7 @@ $php create-tweets-history.php
 
 $source = 'tweets.json';
 $target = 'tweets-history.json';
-$maxTweets = 500;
+$maxTweets = 50000;
 
 while (true) {
     processTweets($source, $target, $maxTweets);
