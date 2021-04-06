@@ -40,12 +40,17 @@ while (true) {
 function processTweets($source, $target, $maxTweets = 500)
 {
 
+
+
+
 //     var_dump(json_decode(
 //       file_get_contents($source), true
 //   ));
 
     // JSON string from file to PHP array
     $arraySource = json_decoder($source);
+    // https://stackoverflow.com/a/34987161
+    $arrayTarget = json_decoder($target);
 
     // Replace index with tweet id
     $arrayTarget = isset($arrayTarget["statuses"]) ? $arrayTarget["statuses"] : array();
