@@ -10,4 +10,5 @@ SEARCH_TERM.php
 README.md
 phirehose-create-tweets-history2*.php
 tweets.json
+tweets-history.json
 uptime-watch-restart.sh
