@@ -38,69 +38,41 @@ while (true) {
 
 function processTweets($source, $target, $maxTweets = 500, $maxHashTags, $forbiddenWords, $requiredWords, $minFollowers)
 {
-
-    // echo "running\n";
-
     // JSON string from file to PHP array
     $arraySource = json_decoder($source);
     $arrayTarget = json_decoder($target);
 
     $combinationArray = array_merge($arraySource["statuses"], $arrayTarget["statuses"]);
-    // echo "count combination array: ";
-    // echo count($combinationArray);
-    // echo "\n";
-
-    // $arrayTargetOld = $arrayTarget;
 
     // creates new array from 'id_str'
     $tweetIds = array_column($combinationArray, 'id_str');
-
-    // print_r($combinationArray);
-    // print_r($tweetIds);
 
     // array_combine ( array $keys , array $values ) : array
     // Creates an array by using the values from the keys array as keys and the values from the values array as the corresponding values.
     $modifiedArray = array_combine($tweetIds, $combinationArray);
 
     // https://stackoverflow.com/a/34987161
-    // ontdubbel
-    // unique array is een object met een key die de id_str is en die heeft als value het hele object (waar de id_str ook weer in staat)
     $uniqueArray = array_unique($modifiedArray, SORT_REGULAR);
 
-    // Remove difference from tailend of tweets, it exceeds $maxTweets
-    // if (count($uniqueArray) > $maxTweets) {
-    //     $diff = count($uniqueArray) - $maxTweets;
-    //     $uniqueArray = array_slice($uniqueArray, $diff);
-    // }
-
-    // https://stackoverflow.com/a/34987161
-    // array_values ( array $array ) : array
-    // array_values() returns all the values from the array and indexes the array numerically.
-
-    // file_put_contents('tweets-TEST1.json', json_encode($uniqueArray));
-
-    /* de value van de key wordt genomen en de key verwijderd, dus:
-
+    /*
     {
     "1384059264382033921": {
     "created_at": "Mon Apr 19 08:20:17 +0000 2021",
     "id": 1384059264382033921,
     "id_str": "1384059264382033921", … ETC
 
-    wordt
+    becomes
 
     [{
     "created_at": "Mon Apr 19 08:20:17 +0000 2021",
     "id": 1384059264382033921,
     "id_str": "1384059264382033921",…
-
      */
     $arrayTarget = array_values($uniqueArray);
-    // file_put_contents('tweets-TEST2.json', json_encode($arrayTarget));
 
     $arrayTargetStripped = [];
 
-    // array uitdunnen
+    // reduce the array by copying
     for ($i = 0; $i < count($arrayTarget); $i++) {
         $tmp["created_at"] = $arrayTarget[$i]["created_at"];
         $tmp["id_str"] = $arrayTarget[$i]["id_str"];
@@ -162,9 +134,6 @@ function processTweets($source, $target, $maxTweets = 500, $maxHashTags, $forbid
     }
 
     $arrayTargetStripped = array_values($arrayTargetStripped);
-
-    // print_r($arrayTargetStripped);
-    // var_dump($arrayTargetStripped);
 
     $arrayTargetFinal['statuses'] = $arrayTargetStripped;
 
