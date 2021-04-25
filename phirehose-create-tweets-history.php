@@ -27,6 +27,7 @@ $php create-tweets-history.php
 
 */
 
+// ini_set('memory_limit', '1024M'); // or you could use 1G
 $source = 'tweets.json';
 $target = 'tweets-history.json';
 $maxTweets = 50000;
@@ -69,7 +70,7 @@ function processTweets($source, $target, $maxTweets = 500)
 
     // https://stackoverflow.com/a/34987161
     // Convert to source formart
-    $arrayTarget["statuses"] = array_values($uniqueArray);
+    $arrayTarget = array_values($uniqueArray);
     $arrayTarget = json_encode($arrayTarget);
 
     file_put_contents('tweets-history.json', $arrayTarget);
