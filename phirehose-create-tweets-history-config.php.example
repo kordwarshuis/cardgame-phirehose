@@ -1,0 +1,11 @@
+<?php
+// INSTRUCTION: remove “.example” from file name
+
+$source = 'tweets.json';
+$target = 'tweets-history.json';
+$maxTweets = 10000; // oldest tweets will be removed if this limit is exceeded
+$minFollowers = 500; // tweets with less followers will be removed
+$maxHashTags = 6; //more hashtags, then tweet removed
+$forbiddenWords = ["example text 1", "example text 2"]; // tweets containing these strings will be removed
+$requiredWords = ["example text 1", "example text 2"]; // tweets containing these strings will be kept
+?>
