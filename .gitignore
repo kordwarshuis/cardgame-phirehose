@@ -1,6 +1,7 @@
 _backup
 .DS_Store
 .history
+.vscode
 live.sh
 live.*.sh
 script_phirehose-local.sh
@@ -8,7 +9,8 @@ API_KEYS.php
 API_KEYS*.php
 SEARCH_TERM.php
 README.md
-phirehose-create-tweets-history2*.php
 tweets.json
 tweets-history.json
 uptime-watch-restart.sh
+test
+phirehose-create-tweets-history-config.php
