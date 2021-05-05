@@ -9,3 +9,6 @@
   #start up phirehose-consume.php again
   screen -dmS phirehoseconsume php phirehose-consume.php;
   sleep 0.5;
+  #start up phirehose-create-tweets-history.php again
+  screen -dmS phirehosehistory php phirehose-create-tweets-history.php;
+  sleep 0.5;
