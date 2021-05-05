@@ -10,6 +10,7 @@ API_KEYS*.php
 SEARCH_TERM.php
 README.md
 tweets.json
+tweets-history.json
 uptime-watch-restart.sh
 test
 phirehose-create-tweets-history-config.php
